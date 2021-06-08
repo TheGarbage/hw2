@@ -1,0 +1,15 @@
+/*CAMBI DESCRIZIONE----------------------------------------------------------------------------------*/
+#descrizione{
+    margin-bottom: 0px;
+}
+
+#descrizione p{
+    border: none;
+    text-align: start;
+    line-height: 1.5rem;
+}
+
+/*CAMBI DISTANZIATORE----------------------------------------------------------------------------------*/
+#distanziatore{
+    height: 200px;
+}

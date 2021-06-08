@@ -1,0 +1,244 @@
+/*CAMBI DESCRIZIONE----------------------------------------------------------------------------------*/
+#descrizione{
+    margin-bottom: 50px;
+}
+
+#descrizione p{
+    border: none;
+}
+
+/*LISTA TITOLI----------------------------------------------------------------------------------*/
+ul{
+    width: 86%;
+}
+
+li{
+    font-size: 1.5rem;
+    margin-bottom: 50px;
+    width: calc(100% - 40px);
+}
+
+li.infoGenerali{
+    padding-bottom: 40px;
+    border-bottom: 3px solid white;
+    margin-bottom: calc(1rem + 10px + 50px);
+}
+
+/*INFO GENERALI----------------------------------------------------------------------------------*/
+li main{
+    display: flex;
+    justify-content: space-between;
+}
+
+li section{
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+    margin-top: 40px;
+    width: calc(50% - 80px);
+}
+
+li form{
+    margin: 0px;
+}
+
+li label{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+li label.submitLabel{
+    margin-bottom: 0px;
+}
+
+li label div, li label input{
+    width: 50%;
+    height: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+li label input{
+    height: calc(1rem + 4px);
+    width: calc(50% + 4px);
+}
+
+li label input.submit{
+    width: fit-content;
+    position: absolute;
+    right: -3rem;
+}
+
+/*MODIFICA DATI----------------------------------------------------------------------------------*/
+div[data-name = 'username']{
+    background-color: rgba(145, 146, 177, .2);
+    border: 2px solid rgba(145, 146, 177, .2);  
+    justify-content: center;
+    align-items: center;
+}
+
+li label div p{
+    width: 70%;
+    margin-left: 4%;
+    text-align: start;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+li label div img{
+    margin-right: 4%;
+    height: .75rem;
+    width: .72rem;
+    padding: 0.04rem;
+    opacity: .8;
+}
+
+/*MODIFICA PASSWORD----------------------------------------------------------------------------------*/
+div[data-name = 'password']{
+    padding: 6px;
+    border-radius: 20px;
+    width: fit-content;
+    margin: 0px auto;
+}
+
+form[name = 'password']{
+    position: relative;
+    padding: 10px;
+    margin-top: -10px;
+    border: 2px solid rgba(255, 255, 255, .8);
+    border-radius: 20px;
+}
+
+form[name = 'password'] img{
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
+}
+
+li label input.submitPassword{
+    position: static;
+}
+
+/*ERRORE----------------------------------------------------------------------------------*/
+input.barraInput.erroreM{
+    border-color: rgba(255, 0, 0, .9);
+}
+
+p.errore.margineRidotto{
+    margin-bottom: 0px;
+    margin-top: 15px;
+    height: 1rem;
+    font-size: .85rem;
+}
+
+p.errore.ribaltato{
+    color: rgb(0, 255, 0);
+}
+
+/*TABELLA TRANSAZIONI----------------------------------------------------------------------------------*/
+li table{
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+.nascondi{
+    border: none;
+}
+
+/*PULSANTE LOGOUT----------------------------------------------------------------------------------*/
+#logout{
+    display: block;
+    text-align: center;
+    width: fit-content;
+    margin: 100px auto 0px auto;
+    padding: .2rem 120px;
+    border: 3px solid rgba(255, 0, 0, .5);
+    border-radius: 40px;
+    background-color: rgba(255, 0, 0, .5);
+}
+
+#logout:hover{
+    background-color: rgba(255, 0, 0, .1);
+    color: rgba(255, 0, 0);
+    border-color: rgba(255, 0, 0);
+}
+
+/*CAMBI DISTANZIATORE----------------------------------------------------------------------------------*/
+#distanziatore{
+    height: 200px;
+}
+
+/*HOVER VARI----------------------------------------------------------------------------------*/
+li label div[data-name = 'username'].barraInput:hover{
+    border-color: rgba(145, 146, 177, .2); 
+}
+
+li label div img:hover{
+    height: .8rem;
+    width: .8rem;
+    padding: 0rem;
+    opacity: 1;
+}
+
+div[data-name = 'password']:hover{
+    background-color: rgba(255, 255, 255, .1);
+}
+
+form[name = 'password'] img:hover{
+    right: -22.5px;
+    top: -22.5px;
+    width: 25px;
+    height: 25px;
+}
+
+/*AGGIUSTAMENTO MENU----------------------------------------------------------------------------------*/
+#menu-pochi-pixel nav li{
+    margin: 0px 10px;
+    font-size: 1.8rem;
+}
+
+#login{
+    border-color: rgba(255, 255, 255, .1);
+    background-color: rgba(255, 255, 255, .1);
+    color: inherit;
+    cursor: default;
+}
+
+/*MEDIA----------------------------------------------------------------------------------*/
+@media (max-width: 900px){ 
+    li main{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    li section{
+        width: 80%;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 600px){ 
+    li main{
+        display: flex;
+        flex-direction: column;
+    }
+
+    li section{
+        width: 90%;
+    }
+
+    li table td, li table th{
+        font-size: 0.5rem;
+    }
+}

@@ -1,0 +1,110 @@
+/*AVVISO NESSUN EVENTO----------------------------------------------------------------------------------*/
+main p{
+    margin: 0 auto;
+    width: fit-content;
+    font-size: 1.2em;
+}
+
+/*EVENTO----------------------------------------------------------------------------------*/
+.evento{
+    margin: 50px auto;
+    display: flex;
+    height: 150px;
+    width: 80%;
+    background-color: rgba(145, 146, 177, .05);
+    border: 2px solid rgba(145, 146, 177, .2);
+    padding: 6px;
+    border-radius: 20px;
+    font-size: 35px;
+}
+
+/*IMMAGINE EVENTO----------------------------------------------------------------------------------*/
+.evento img{
+    border-radius: 20px;
+    margin-right: 40px;
+    height: 100%;
+    width: 22.5%;
+    opacity: 0.7;
+}
+
+/*TESTO EVENTO----------------------------------------------------------------------------------*/
+.evento div{
+    width: calc(77.5% - 40px);
+}
+
+.evento div div{
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-right: 20px;
+    height: 25%;
+    width: calc(100% - 20px);
+}
+
+.evento h4{
+    margin: 0px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.evento h5{
+    margin: 0px;
+}
+
+.evento p{
+    display: flex;
+    align-items: center;
+    height: 75%;
+    font-size: 0.8em;
+    margin: 0px;
+}
+
+/*EVENTO GIOCO PREFERITO----------------------------------------------------------------------------------*/
+.eventoPreferito{
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, .8);
+}
+
+.eventoPreferito img{
+    opacity: 0.8;
+}
+
+.evento .stellaEvento{
+    height: 1rem;
+    width: 1rem;
+    margin: 0px;
+    margin-right: 5px;
+}
+
+/*MEDIA----------------------------------------------------------------------------------*/
+@media (max-width: 1650px){
+    #descrizione{
+        margin-bottom: 100px;
+    }
+    .evento{
+        height: 125px;
+        font-size: 25px;
+    }
+}
+
+@media (max-width: 700px){  
+    .evento{
+        height: 100px;
+        font-size: 20px;
+        margin: 30px auto;
+    }
+
+    .evento img{
+        width: 25%;
+        margin-right: 20px;
+    }
+    
+    .evento div{
+        width: calc(75% - 20px);
+    }
+}
+
+@media (max-width: 500px){  
+    .evento{
+        font-size: 18px;
+    }
+}
