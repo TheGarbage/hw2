@@ -1,3 +1,3 @@
 # hw2
 
-davide bucchieri o46002072
+Davide Bucchieri o46002072
