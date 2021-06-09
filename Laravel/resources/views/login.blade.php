@@ -25,6 +25,7 @@
                 <label>&nbsp<input type='submit' class="submit"></label>
                 <p class="pointer">Se non hai un account registrati!</p>
             </form>
+            <a href='{{url($url)}}'><img src="/laravel/public/img/xButton.jpg"></a>
         </main>
         <p class='erroreL'>@if(isset($old_username)) Credenziali non valide @endif</p>
     </body>

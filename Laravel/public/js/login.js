@@ -10,17 +10,31 @@ function stampa(json){
     else{
         errore.textContent = json['risposta'];
         form.classList.remove('hidden');
+        document.querySelector('main img').classList.remove('hidden');
         if(json['risposta'] === "Username non disponibile")
             form.userName.parentNode.classList.add('erroreL');
     }
 }
 
 //FUNZIONI CONTROLLO POST-SUBMIT-------------------------------------------------------------------------------------------------------------------------------------------------------
-function controlloContenutoRegistrazione(event){
-    const errore = document.querySelector('p.erroreL');
+function bloccoSubmit(event){
     event.preventDefault();
-    if(document.querySelector('label.erroreL') !== null && errore.textContent !== "Username non disponibile");
-    else if(form.nomeCognome.value.length === 0 || form.userName.value.length === 0 || form.passWord.value.length === 0 ||
+    controlloContenutoRegistrazione();
+    if(document.querySelector('label.erroreL') === null){
+        const errore = document.querySelector('p.erroreL');
+        form.classList.add('hidden');
+        document.querySelector('main img').classList.add('hidden');
+        if(errore.textContent === "Username non disponibile"){
+            form.userName.parentNode.classList.remove('erroreL');
+            errore.textContent = "";
+        }
+        fetch('/laravel/public/registration', {method: 'post', body: new FormData(form)}).then(rispostaRegistrazione).then(stampa);
+    }
+}
+
+function controlloContenutoRegistrazione(){
+    const errore = document.querySelector('p.erroreL');
+    if(form.nomeCognome.value.length === 0 || form.userName.value.length === 0 || form.passWord.value.length === 0 ||
         form.confermaPassword.value.length === 0 || form.occupazione.value.length === 0 || form.dataNascita.value.length === 0){
         errore.textContent = "Devi compilare tutti i campi";
         if(form.nomeCognome.value.length == 0) {
@@ -73,7 +87,9 @@ function controlloContenutoRegistrazione(event){
     }
     else if(form.passWord.value !== form.confermaPassword.value){
         errore.textContent = "Le due password non corrispondono";
+        form.passWord.parentNode.classList.add('erroreL');
         form.confermaPassword.parentNode.classList.add('erroreL');
+        form.passWord.addEventListener('blur', controllaPassword);
         form.confermaPassword.addEventListener('blur', controllaPassword);
     }
     else if(!form.privacy.checked){
@@ -81,14 +97,6 @@ function controlloContenutoRegistrazione(event){
         form.privacy.parentNode.classList.add('erroreL');
         form.privacy.addEventListener('click', privacyAccettata)
     }     
-    else{
-        form.classList.add('hidden');
-        if(errore.textContent === "Username non disponibile"){
-            form.userName.parentNode.classList.remove('erroreL');
-            errore.textContent = "";
-        }
-        fetch('registration', {method: 'post', body: new FormData(form)}).then(rispostaRegistrazione).then(stampa);
-    }
 }
 
 function controlloContenutoLogin(event){
@@ -121,6 +129,7 @@ function controllaLunghezza(event){
         input.parentNode.classList.remove('erroreL');
         input.removeEventListener('blur', controllaLunghezza);
         document.querySelector('p.erroreL').textContent = "";
+        controlloContenutoRegistrazione();
     }
 }
 
@@ -129,6 +138,7 @@ function controllaLunghezzaPassword(){
         form.passWord.parentNode.classList.remove('erroreL');
         form.passWord.removeEventListener('blur', controllaLunghezzaPassword);
         document.querySelector('p.erroreL').textContent = "";
+        controlloContenutoRegistrazione();
     }
 }
 
@@ -137,15 +147,21 @@ function controllaErrore(event){
     if(input.value.length !== 0){
         input.parentNode.classList.remove('erroreL');
         input.removeEventListener('blur', controllaErrore);
-        if(document.querySelector('label.erroreL') === null)
+        if(document.querySelector('label.erroreL') === null){
             document.querySelector('p.erroreL').textContent = "";
+            controlloContenutoRegistrazione();
+        }
     }
 }
 
 function controllaPassword(){
     if(form.confermaPassword.value === form.passWord.value){
+        form.passWord.parentNode.classList.remove('erroreL');
         form.confermaPassword.parentNode.classList.remove('erroreL');
+        form.passWord.removeEventListener('blur', controllaPassword);
+        form.confermaPassword.removeEventListener('blur', controllaPassword);
         document.querySelector('p.erroreL').textContent = "";
+        controlloContenutoRegistrazione();
     }
 }
 
@@ -154,6 +170,7 @@ function privacyAccettata(event){
     privacy.parentNode.classList.remove('erroreL');
     privacy.removeEventListener('click', privacyAccettata);
     document.querySelector('p.erroreL').textContent = "";
+    controlloContenutoRegistrazione();
 }
 
 //SWITCH REGISTRAZIONE LOGIN -------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -181,7 +198,7 @@ function registrazioneBis(event){
     p.removeEventListener('click', registrazioneBis);
     p.addEventListener('click', login);
     form.removeEventListener('submit', controlloContenutoLogin);
-    form.addEventListener('submit', controlloContenutoRegistrazione);
+    form.addEventListener('submit', bloccoSubmit);
 }
 
 function login(event){
@@ -194,7 +211,7 @@ function login(event){
     titolo.textContent = "Bentornato";
     p.removeEventListener('click', login);
     p.addEventListener('click', registrazioneBis);
-    form.removeEventListener('submit', controlloContenutoRegistrazione);
+    form.removeEventListener('submit', bloccoSubmit);
     form.addEventListener('submit', controlloContenutoLogin);
 }
 
@@ -259,7 +276,7 @@ function registrazione(event){
     p.removeEventListener('click', registrazione);
     p.addEventListener('click', login);
     form.removeEventListener('submit', controlloContenutoLogin);
-    form.addEventListener('submit', controlloContenutoRegistrazione);
+    form.addEventListener('submit', bloccoSubmit);
 }
 
 //CONFIGURAZIONE INIZIALE -------------------------------------------------------------------------------------------------------------------------------------------------------

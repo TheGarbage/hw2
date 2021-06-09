@@ -2,7 +2,7 @@
     <head>
         <meta charset="utf-8">
         <title>{{ Route::currentRouteName() }}</title>
-        <link rel="stylesheet" href="css/principale.css">
+        <link rel="stylesheet" href='{{ url("css/principale.css") }}'>
         @yield('style')
         <script src='{{ url("js/menuMobile.js") }}' defer></script>
         @yield('script')
@@ -27,7 +27,7 @@
             <section id="menu">
                 <a id="login" @if(isset($nome)) href = "{{ url('logout') }}" @else href = "{{ url('login/'.Route::currentRouteName()) }}" @endif>
                     @if(isset($nome))Ciao, {{ $nome }}! @else Login @endif
-                </a></br>
+                </a><br>
                 <nav>   
                 <a @if(Request::routeIs('home')) id="paginaAttuale" @else href="{{ url('home') }}" @endif>Home</a>
                 <a @if(Request::routeIs('eventi')) id="paginaAttuale" @else href="{{ url('eventi') }}" @endif>Eventi</a>

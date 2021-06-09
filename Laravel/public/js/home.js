@@ -148,7 +148,7 @@ function creaSottoSito(blocco){
     const divNonPreferiti = document.createElement('div');
     divNonPreferiti.classList.add('giochi');
     nonPreferiti.appendChild(divNonPreferiti);
-    fetch('games/' + index[newSottoSito.dataset.tema]).then(onResponse).then(onJsonVideogiochi);
+    fetch('/laravel/public/home/games/' + index[newSottoSito.dataset.tema]).then(onResponse).then(onJsonVideogiochi);
     return newSottoSito;
 }
 

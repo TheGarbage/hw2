@@ -16,17 +16,19 @@ Route::post('registration', 'registrationController@createAccount');
 
 Route::get('home', 'homeController@openHome')->name('home');
 Route::get('home/banner', 'homeController@datiBanner');
+Route::get('home/scopriDiPiu', 'homeController@openScopriDiPiu');
+Route::get('home/games/{filter}', 'homeController@readGames');
 
-Route::get('games/{filter}', 'gamesController@readGames');
+Route::get('favorites/read', 'favoriteController@readFavorites');
+Route::get('favorites/insert/{game_id}', 'favoriteController@insertFavorite');
+Route::get('favorites/delete/{game_id}', 'favoriteController@deleteFavorite');
 
-Route::get('favorites/read', 'gamesController@readFavorites');
-Route::get('favorites/insert/{game_id}', 'gamesController@insertFavorite');
-Route::get('favorites/delete/{game_id}', 'gamesController@deleteFavorite');
-
-Route::get('contest/', 'contestController@openContest')->name('contest');
+Route::get('contest/', 'contestController@openContest');
 Route::get('contest/default', 'contestController@defaultResearch');
 Route::get('contest/search/{game}', 'contestController@search');
 Route::get('contest/select/{game}', 'contestController@select');
 Route::get('contest/delete', 'contestController@delete');
 
+
+Route::get('contatti', 'contattiController@OpenContatti')->name('contatti');
 ?>

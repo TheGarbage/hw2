@@ -8,7 +8,8 @@ class loginController extends BaseController{
         return redirect('home');
         $old_username = Request::old('userName');
         return view('login')
-            ->with('old_username', $old_username);
+            ->with('old_username', $old_username)
+            ->with('url', $url);
     }
 
     public function checkLogin($url = 'home'){

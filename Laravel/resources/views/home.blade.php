@@ -27,7 +27,7 @@
 )
 
 @section('scopriDiPiu')
-    <a href="aPage-scopriDiPiu.php">Scopri di più</a>
+    <a href= '{{ url("home/scopriDiPiu") }}'>Scopri di più</a>
 @endsection
 
 @section('contenuto')

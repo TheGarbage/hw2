@@ -224,7 +224,7 @@ function creaSottoSito(blocco){
     const divNonPreferiti = document.createElement('div');
     divNonPreferiti.classList.add('giochi');
     nonPreferiti.appendChild(divNonPreferiti);
-    fetch('games/' + index[newSottoSito.dataset.tema]).then(onResponse).then(onJsonVideogiochi);
+    fetch('/laravel/public/home/games/' + index[newSottoSito.dataset.tema]).then(onResponse).then(onJsonVideogiochi);
     return newSottoSito;
 }
 
@@ -232,7 +232,7 @@ function creaSottoSito(blocco){
 function inserisciPreferiti(event){  
     const codice = event.currentTarget.dataset.codice + "nonPreferito";
     giochiPreferiti.unshift(event.currentTarget.dataset.codice);
-    fetch('favorites/insert/' + event.currentTarget.dataset.codice).then(onResponse).then(esitoModifica);
+    fetch('/laravel/public/favorites/insert/' + event.currentTarget.dataset.codice).then(onResponse).then(esitoModifica);
     const giochi = document.querySelectorAll('.gioco[data-codice ="' + codice + '"]');
     let imgPreferiti;
     let preferiti;
@@ -269,7 +269,7 @@ function togliPreferiti(event){
         item.querySelector('.stella').classList.add('hidden');
     }
     giochiPreferiti.splice(giochiPreferiti.indexOf(imgPreferiti.dataset.codice), 1);
-    fetch('favorites/delete/' + imgPreferiti.dataset.codice).then(onResponse).then(esitoModifica);
+    fetch('/laravel/public/favorites/delete/' + imgPreferiti.dataset.codice).then(onResponse).then(esitoModifica);
 }
 
 function ricerca(event){
@@ -405,7 +405,7 @@ let giochiAperti = [];
 let vecchiaValue = '';
 const giochiPreferiti = [];
 let errorePreferiti;
-fetch('favorites/read').then(onResponse).then(onJsonPreferiti);
+fetch('/laravel/public/favorites/read').then(onResponse).then(onJsonPreferiti);
 const blocchi = document.querySelectorAll('#blocchi .blocco');
 for (const blocco of blocchi){
     blocco.addEventListener('mouseover', vediDidascalia);
