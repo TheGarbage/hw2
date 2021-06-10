@@ -32,5 +32,8 @@ Route::get('contest/delete', 'contestController@delete');
 
 Route::get('classifica', 'rankingController@OpenRanking')->name('classifica');
 
+Route::get('eventi', 'eventsController@OpenEvents')->name('eventi');
+Route::get('eventi/get', 'eventsController@getEvents');
+
 Route::get('contatti', 'contactsController@OpenContacts')->name('contatti');
 ?>

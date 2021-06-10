@@ -1,6 +1,7 @@
 /*AVVISO NESSUN EVENTO----------------------------------------------------------------------------------*/
 main p{
     margin: 0 auto;
+    margin-bottom: 100px;
     width: fit-content;
     font-size: 1.2em;
 }
@@ -73,6 +74,16 @@ main p{
     width: 1rem;
     margin: 0px;
     margin-right: 5px;
+}
+
+/*SEPARATORE----------------------------------------------------------------------------------*/
+#separatore{
+    width: 50%;
+    margin: 150px auto;
+    height: 3px;
+    background-color: white;
+    opacity: .7;
+    border-radius: 20px;
 }
 
 /*MEDIA----------------------------------------------------------------------------------*/

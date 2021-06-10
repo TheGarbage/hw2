@@ -10,8 +10,10 @@ class rankingController extends BaseController{
         $user = User::find(session('userNameLudoteca'));
         if(isset($user)){
             foreach($response['ranking'] as $item)
-                if($item->username ===  $user->username)
+                if($item->username ===  $user->username){
                     $response['user'] =  $item;
+                    break;
+                }
             if(!isset($response['user']))
                 $response['user'] =  (object)array(
                     'posizione' => 'N/d',
