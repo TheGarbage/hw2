@@ -2,8 +2,8 @@
 
 use Illuminate\Routing\Controller as BaseController;
 
-class contattiController extends BaseController{
-    public function openContatti(){
+class contactsController extends BaseController{
+    public function openContacts(){
         $user = User::find(session('userNameLudoteca'));
         if(isset($user))
             return view('contatti')

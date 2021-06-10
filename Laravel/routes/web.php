@@ -16,8 +16,9 @@ Route::post('registration', 'registrationController@createAccount');
 
 Route::get('home', 'homeController@openHome')->name('home');
 Route::get('home/banner', 'homeController@datiBanner');
-Route::get('home/scopriDiPiu', 'homeController@openScopriDiPiu');
 Route::get('home/games/{filter}', 'homeController@readGames');
+
+Route::get('scopriDiPiu', 'homeController@openScopriDiPiu')->name('scopriDiPiu');
 
 Route::get('favorites/read', 'favoriteController@readFavorites');
 Route::get('favorites/insert/{game_id}', 'favoriteController@insertFavorite');
@@ -29,6 +30,7 @@ Route::get('contest/search/{game}', 'contestController@search');
 Route::get('contest/select/{game}', 'contestController@select');
 Route::get('contest/delete', 'contestController@delete');
 
+Route::get('classifica', 'rankingController@OpenRanking')->name('classifica');
 
-Route::get('contatti', 'contattiController@OpenContatti')->name('contatti');
+Route::get('contatti', 'contactsController@OpenContacts')->name('contatti');
 ?>

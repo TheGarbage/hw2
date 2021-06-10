@@ -27,7 +27,7 @@
 )
 
 @section('scopriDiPiu')
-    <a href= '{{ url("home/scopriDiPiu") }}'>Scopri di più</a>
+    <a href= '{{ url("scopriDiPiu") }}'>Scopri di più</a>
 @endsection
 
 @section('contenuto')
