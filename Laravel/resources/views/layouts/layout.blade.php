@@ -25,7 +25,10 @@
             </section>
             <h1>@yield('ludoteca')</h1>
             <section id="menu">
-                <a id="login" @if(isset($nome)) href = "{{ url('logout') }}" @else href = "{{ url('login/'.Route::currentRouteName()) }}" @endif>
+                <a id="login" @if(Request::routeIs('infoProfilo')) href = "#" 
+                              @elseif(isset($nome)) href = "{{ url('infoProfilo') }}" 
+                              @else href = "{{ url('login/'.Route::currentRouteName()) }}"  
+                              @endif>
                     @if(isset($nome))Ciao, {{ $nome }}! @else Login @endif
                 </a><br>
                 <nav>   

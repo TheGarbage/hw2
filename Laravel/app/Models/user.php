@@ -11,6 +11,10 @@ class User extends Model{
         return $this->hasOne("Contest");
     }
 
+    public function Registers(){
+        return $this->hasMany("Register");
+    }
+
     protected $hidden = [
         'password'
     ];

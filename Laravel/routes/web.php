@@ -30,10 +30,12 @@ Route::get('contest/search/{game}', 'contestController@search');
 Route::get('contest/select/{game}', 'contestController@select');
 Route::get('contest/delete', 'contestController@delete');
 
-Route::get('classifica', 'rankingController@OpenRanking')->name('classifica');
+Route::get('classifica', 'rankingController@openRanking')->name('classifica');
 
-Route::get('eventi', 'eventsController@OpenEvents')->name('eventi');
+Route::get('eventi', 'eventsController@openEvents')->name('eventi');
 Route::get('eventi/get', 'eventsController@getEvents');
 
-Route::get('contatti', 'contactsController@OpenContacts')->name('contatti');
+Route::get('contatti', 'contactsController@openContacts')->name('contatti');
+
+Route::get('infoProfilo', 'infoProfiloController@openInfoProfilo')->name('infoProfilo')
 ?>

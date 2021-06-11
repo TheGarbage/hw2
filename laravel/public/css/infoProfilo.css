@@ -178,6 +178,19 @@ li table{
     height: 200px;
 }
 
+/*AGGIUSTAMENTO MENU----------------------------------------------------------------------------------*/
+#menu-pochi-pixel nav li{
+    margin: 0px 10px;
+    font-size: 1.8rem;
+}
+
+#login{
+    border-color: rgba(255, 255, 255, .1);
+    background-color: rgba(255, 255, 255, .1);
+    color: inherit;
+    cursor: default;
+}
+
 /*HOVER VARI----------------------------------------------------------------------------------*/
 li label div[data-name = 'username'].barraInput:hover{
     border-color: rgba(145, 146, 177, .2); 
@@ -201,17 +214,8 @@ form[name = 'password'] img:hover{
     height: 25px;
 }
 
-/*AGGIUSTAMENTO MENU----------------------------------------------------------------------------------*/
-#menu-pochi-pixel nav li{
-    margin: 0px 10px;
-    font-size: 1.8rem;
-}
-
-#login{
+#login:hover{
     border-color: rgba(255, 255, 255, .1);
-    background-color: rgba(255, 255, 255, .1);
-    color: inherit;
-    cursor: default;
 }
 
 /*MEDIA----------------------------------------------------------------------------------*/
