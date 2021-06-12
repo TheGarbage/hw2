@@ -37,5 +37,9 @@ Route::get('eventi/get', 'eventsController@getEvents');
 
 Route::get('contatti', 'contactsController@openContacts')->name('contatti');
 
-Route::get('infoProfilo', 'infoProfiloController@openInfoProfilo')->name('infoProfilo')
+Route::get('infoProfilo', 'infoProfiloController@openInfoProfilo')->name('infoProfilo');
+Route::post('infoProfilo/nome', 'infoProfiloController@modificaNome');
+Route::post('infoProfilo/data', 'infoProfiloController@modificaDataNascita');
+Route::post('infoProfilo/occupazione', 'infoProfiloController@modificaOccupazione');
+Route::post('infoProfilo/modificaPassword', 'infoProfiloController@modificaPassword');
 ?>

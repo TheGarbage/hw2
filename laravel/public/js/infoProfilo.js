@@ -2,7 +2,7 @@
 function esitoModificaDati(json){
     const errore = document.querySelector('p.errore.margineRidotto');
     if(json['risposta'] === "ok"){
-        const label = document.querySelector("form[name='" + json['name'] + "'] label");
+        const label = document.querySelector("form[name='" + json['tipoDato'] + "'] label");
         const inputs = label.querySelectorAll('input');
         for(item of inputs)
             item.classList.add('hidden');
@@ -83,13 +83,16 @@ function inviaDati(event){
             inputs[0].classList.remove('erroreM');
         if(errore.textContent.length !== 0)
             errore.textContent = "";
-        fetch("server-database.php?comando=modificaDati&chiave=" + form.name + "&valore=" + inputs[0].value).then(onResponse).then(esitoModificaDati);
+        fetch(
+            "/laravel/public/infoProfilo/" + form.name, {method: 'post', body: new FormData(form)}
+        ).then(onResponse).then(esitoModificaDati);
     }
 }
 
 function inviaPasswords(event){
     event.preventDefault();
     const errore = document.querySelector('p.errore.margineRidotto');
+    const form = document.querySelector("form[name='password']");
     const vecchiaPassword = document.querySelector("input[name='vecchiaPassword']");
     const nuovaPassword = document.querySelector("input[name='nuovaPassword']");
     const confermaPassword = document.querySelector("input[name='confermaPassword']");
@@ -117,13 +120,14 @@ function inviaPasswords(event){
     }
     else if(nuovaPassword.value !== confermaPassword.value){
         errore.textContent = "La password di conferma non corrisponde";
+        nuovaPassword.classList.add('erroreM'); 
         confermaPassword.classList.add('erroreM');   
     }
     else{ 
         if(errore.textContent.length !== 0)
             errore.textContent = "";
         fetch(
-            "server-database.php?comando=cambioPassword&vecchiaPassword=" + vecchiaPassword.value + "&nuovaPassword=" + nuovaPassword.value + "&confermaPassword=" + confermaPassword.value
+            "/laravel/public/infoProfilo/modificaPassword", {method: 'post', body: new FormData(form)}
         ).then(onResponse).then(esitoCambioPassword);
     }
 }
@@ -169,7 +173,7 @@ function chiudiModificaPassword(){
         nuovaPassword.classList.remove('erroreM');
     if(confermaPassword.classList.contains('erroreM'))
         confermaPassword.classList.remove('erroreM');
-    if(errore.textContent.includes('password') || errore.textContent.includes('Password'))
+    if(errore.textContent.includes('password'))
         errore.textContent = "";
     vecchiaPassword.value = nuovaPassword.value = confermaPassword.value = "";
     const form = vecchiaPassword.parentNode.parentNode;
@@ -191,11 +195,15 @@ function apriModificaPassword(event){
     const section = event.currentTarget.parentNode;
     const form = document.createElement('form');
     form.name = "password";
-    form.method = "post";
     form.addEventListener('submit', inviaPasswords);
     section.appendChild(form);
+    const token = document.createElement('input');
+    token.type = "hidden";
+    token.name = "_token";
+    token.value = document.querySelector('form input').value;
+    form.appendChild(token);
     const xButton = document.createElement('img');
-    xButton.src = "Immagini/xButton.jpg";
+    xButton.src = "/laravel/public/img/xButton.jpg";
     xButton.classList.add('pointer');
     xButton.addEventListener('click', chiudiModificaPassword)
     form.appendChild(xButton);

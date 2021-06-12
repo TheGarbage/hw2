@@ -50,6 +50,58 @@ class infoProfiloController extends BaseController{
         }
         return redirect('login/infoProfilo');
     }
+
+    public function modificaNome(){
+        $user = User::find(session('userNameLudoteca'));
+        if(isset($user)){
+            $user->nome = request('nome');
+            $user->save();
+            return array(
+                'risposta' => "ok",
+                'tipoDato' => "nome"
+            );
+        }
+        return ['risposta' => "Non risulta una sessione aperta"];
+    }
+
+    public function modificaDataNascita(){
+        $user = User::find(session('userNameLudoteca'));
+        if(isset($user)){
+            $user->anno_nascita = request('data');
+            $user->save();
+            return array(
+                'risposta' => "ok",
+                'tipoDato' => "data"
+            );
+        }
+        return ['risposta' => "Non risulta una sessione aperta"];
+    }
+
+    public function modificaOccupazione(){
+        $user = User::find(session('userNameLudoteca'));
+        if(isset($user)){
+            $user->occupazione = request('occupazione');
+            $user->save();
+            return array(
+                'risposta' => "ok",
+                'tipoDato' => "occupazione"
+            );
+        }
+        return ['risposta' => "Non risulta una sessione aperta"];
+    }
+
+    public function modificaPassword(){
+        $user = User::find(session('userNameLudoteca'));
+        if(isset($user)){
+            if (password_verify(request('vecchiaPassword'), $user->password)){
+                $user->password = password_hash(request('nuovaPassword'), PASSWORD_BCRYPT);
+                $user->save();
+                return ['risposta' => "ok"];
+            }
+            return ['risposta' => "falsaPassword"];
+        }
+        return ['risposta' => "Non risulta una sessione aperta"];
+    }
 }
 
 ?>

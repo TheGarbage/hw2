@@ -18,6 +18,7 @@
             <main>
                 <section>
                     <form name='nome'>
+                        <input type='hidden' name='_token' value='{{ csrf_token() }}'>
                         <label>Nome e cognome: 
                             <div data-name='nome' data-max='50' class='barraInput'>
                                 <p>{{ $dati['nome'] }}</p><img class='pointer' src='/laravel/public/img/modificabile.jpg'>
@@ -27,7 +28,8 @@
                     <label>Username: 
                         <div data-name='username' class='barraInput'>{{ $dati['username'] }}</div>
                     </label> 
-                    <form name='anno_nascita'>
+                    <form name='data'>
+                        <input type='hidden' name='_token' value='{{ csrf_token() }}'>
                         <label>Data nascita: 
                             <div data-name='data' class='barraInput'>
                                 <p>{{ explode(' ', $dati['data_nascita'], 2)[0] }}</p><img class='pointer' src='/laravel/public/img/modificabile.jpg'>
@@ -35,6 +37,7 @@
                         </label>
                     </form>
                     <form name='occupazione'>
+                        <input type='hidden' name='_token' value='{{ csrf_token() }}'>
                         <label>Occupazione: 
                             <div data-name='occupazione' data-max='30' class='barraInput'>
                                 <p>{{ $dati['occupazione'] }}</p><img class='pointer' src='/laravel/public/img/modificabile.jpg'>
