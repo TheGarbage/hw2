@@ -12,10 +12,6 @@ function formattaNumero(numero){
 
 //Configurazione Iniziale -------------------------------------------------------------------------------------------------------------------------------------------------------
 function onJson(json){
-    if(json['risposta'] !== undefined){ 
-        console.log(json['risposta']);
-        return;
-    }
     const sezione = document.querySelector('#alertNonCreato');
     sezione.id = "alert";
     const h4 = document.createElement('h4');

@@ -98,7 +98,7 @@ class infoProfiloController extends BaseController{
                 $user->save();
                 return ['risposta' => "ok"];
             }
-            return ['risposta' => "falsaPassword"];
+            return ['risposta' => "vecchiaPasswordErrata"];
         }
         return ['risposta' => "Non risulta una sessione aperta"];
     }

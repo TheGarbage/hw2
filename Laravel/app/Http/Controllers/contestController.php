@@ -41,8 +41,6 @@ class contestController extends BaseController{
                 'ordering' => "-metacritic",
                 'page_size' => 50
             ]);
-            if($json->failed()) 
-                return ['risposta' => "Impossibile connettersi all'api"];
             return $this->creaResponse($json);
         }
         return ['risposta' => "Non risulta una sessione aperta"];

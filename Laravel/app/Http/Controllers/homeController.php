@@ -18,8 +18,6 @@ class homeController extends BaseController{
         $jsonVaccini = Http::get('https://covid-api.mmediagroup.fr/v1/vaccines', [
                 'country' => "Italy"
         ]);
-        if($jsonCasi->failed() || $jsonVaccini->failed()) 
-            return ['risposta' => "Impossibile connettersi all'api"];
         $response = array(
             'casi' => array( 
                 'popolazione' => $jsonCasi['All']['population'],

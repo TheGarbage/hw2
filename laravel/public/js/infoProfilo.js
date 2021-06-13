@@ -1,15 +1,23 @@
+//FUNZIONI D'APPOGGIO----------------------------------------------------------------------------------------------
+function chiudiAltro(){
+    chiudiModifica(document.nome, document.nome.querySelector('label div').innerText);
+    chiudiModifica(document.data, document.data.querySelector('label div').innerText);
+    chiudiModifica(document.occupazione, document.occupazione.querySelector('label div').innerText);
+    if(document.password !== undefined && !document.password.classList.contains('hidden'))
+        chiudiModificaPassword();
+    const errore = document.querySelector('p.errore.margineRidotto');
+    if(errore.classList.contains('ribaltato'))
+        errore.classList.remove('ribaltato');
+}
+
 //RISPOSTE FETCH -------------------------------------------------------------------------------------------------------------------------------------------------------
 function esitoModificaDati(json){
     const errore = document.querySelector('p.errore.margineRidotto');
     if(json['risposta'] === "ok"){
-        const label = document.querySelector("form[name='" + json['tipoDato'] + "'] label");
-        const inputs = label.querySelectorAll('input');
-        for(item of inputs)
-            item.classList.add('hidden');
-        const div = label.querySelector('div');
-        div.querySelector('p').textContent = label.querySelector('input').value;
-        div.classList.remove('hidden');
-        errore.textContent = "Modifica '" + label.innerText.split(':')[0] + "' effettuata";
+        const form = document.querySelector("form[name='" + json['tipoDato'] + "']");
+        const inputs = form.querySelectorAll('label input');
+        chiudiModifica(form, inputs[0].value.trimEnd().trimStart());
+        errore.textContent = "Modifica '" + form.querySelector('label').innerText.split(':')[0] + "' effettuata";
         errore.classList.add('ribaltato');
     }
     else
@@ -18,31 +26,22 @@ function esitoModificaDati(json){
 
 function esitoCambioPassword(json){
     const errore = document.querySelector('p.errore.margineRidotto');
-    const vecchiaPassword = document.querySelector("input[name='vecchiaPassword']");
-    const nuovaPassword = document.querySelector("input[name='nuovaPassword']");
-    const confermaPassword = document.querySelector("input[name='confermaPassword']");
     if(json['risposta'] === "ok"){
-        if(vecchiaPassword.classList.contains('erroreM'))
-            vecchiaPassword.classList.remove('erroreM');
-        if(nuovaPassword.classList.contains('erroreM'))
-            nuovaPassword.classList.remove('erroreM');
-        if(confermaPassword.classList.contains('erroreM'))
-            confermaPassword.classList.remove('erroreM');
-        if(errore.textContent.length !== 0)
-            errore.textContent = "";
-        vecchiaPassword.value = nuovaPassword.value = confermaPassword.value = "";
-        const form = vecchiaPassword.parentNode.parentNode;
-        form.parentNode.querySelector('div').classList.remove('hidden');
-        form.classList.add('hidden');
+        document.password.vecchiaPassword.value = document.password.nuovaPassword.value = document.password.confermaPassword.value = "";
+        document.password.parentNode.querySelector('div').classList.remove('hidden');
         errore.textContent = "Password aggiornata con successo";
         errore.classList.add('ribaltato');
     }
-    else if(json['risposta'] === "falsaPassword"){
+    else if(json['risposta'] === "vecchiaPasswordErrata"){
+        document.password.classList.remove('hidden');
         errore.textContent = "La password vecchia non corrisponde, riprovare";
-        vecchiaPassword.classList.add('erroreM');
+        document.password.vecchiaPassword.addEventListener('keyup', vecchiaPassword);
+        document.password.vecchiaPassword.classList.add('erroreM');
     }
-    else
+    else{
+        document.password.classList.remove('hidden');
         errore.textContent = json['risposta'];
+    }
 }
 
 function onResponse(response){
@@ -53,95 +52,155 @@ function onResponse(response){
 function inviaDati(event){
     event.preventDefault();
     const form = event.currentTarget;
-    const inputs = form.querySelectorAll('input');
-    const errore = document.querySelector('p.errore.margineRidotto');
-    const div = form.querySelector('div');
-    if(errore.classList.contains('ribaltato')){
-        errore.classList.remove('ribaltato');
-        errore.textContent = "";
-    }
-    if(inputs[0].value.length === 0){
-        errore.textContent = "Non puoi lasciare il campo vuoto";
-        inputs[0].classList.add('erroreM');
-    }
-    else if(inputs[0].value.length.toString() > inputs[0].dataset.max && 
-            !(inputs[0].value.length.toString().length < inputs[0].dataset.max.length)){
-        errore.textContent = "Puoi inserire al massimo " + inputs[0].dataset.max + " caratteri";
-        inputs[0].classList.add('erroreM');
-    }
-    else if(inputs[0].value === div.querySelector('p').textContent){
-        if(inputs[0].classList.contains('erroreM'))
-            inputs[0].classList.remove('erroreM');
-        if(errore.textContent.length !== 0)
-            errore.textContent = "";
-        for(item of inputs)
-            item.classList.add('hidden');
-        div.classList.remove('hidden');
-    }
-    else{
-        if(inputs[0].classList.contains('erroreM'))
-            inputs[0].classList.remove('erroreM');
-        if(errore.textContent.length !== 0)
-            errore.textContent = "";
-        fetch(
-            "/laravel/public/infoProfilo/" + form.name, {method: 'post', body: new FormData(form)}
-        ).then(onResponse).then(esitoModificaDati);
+    const inputs = form.querySelectorAll('label input');
+    const div = form.querySelector('label div');
+    if(!inputs[0].classList.contains('erroreM')){
+        if(inputs[0].value.trimEnd().trimStart() === div.querySelector('p').textContent)
+            chiudiModifica(form, div.querySelector('p').textContent);
+        else
+            fetch("/laravel/public/infoProfilo/" + form.name, {method: 'post', body: new FormData(form)}).then(onResponse).then(esitoModificaDati);
     }
 }
 
 function inviaPasswords(event){
     event.preventDefault();
+    if(controlloPassword()){
+        document.password.classList.add('hidden');
+        fetch("/laravel/public/infoProfilo/modificaPassword", {method: 'post', body: new FormData(document.password)}).then(onResponse).then(esitoCambioPassword);
+    }
+}
+
+//CONTROLLO DATI --------------------------------------------------------------------------------------
+function controlloDati(event){
+    const form = event.currentTarget.parentNode.parentNode;
+    const inputs = form.querySelectorAll('label input');
     const errore = document.querySelector('p.errore.margineRidotto');
-    const form = document.querySelector("form[name='password']");
-    const vecchiaPassword = document.querySelector("input[name='vecchiaPassword']");
-    const nuovaPassword = document.querySelector("input[name='nuovaPassword']");
-    const confermaPassword = document.querySelector("input[name='confermaPassword']");
-    if(errore.classList.contains('ribaltato')){
-        errore.classList.remove('ribaltato');
-        errore.textContent = "";
+    if(inputs[0].value.trimEnd().trimStart().length === 0){
+        if(errore.textContent != "Non puoi lasciare il campo vuoto")
+            errore.textContent = "Non puoi lasciare il campo vuoto";
+        if(!inputs[0].classList.contains('erroreM'))
+            inputs[0].classList.add('erroreM');
     }
-    if(vecchiaPassword.classList.contains('erroreM'))
-        vecchiaPassword.classList.remove('erroreM');
-    if(nuovaPassword.classList.contains('erroreM'))
-        nuovaPassword.classList.remove('erroreM');
-    if(confermaPassword.classList.contains('erroreM'))
-        confermaPassword.classList.remove('erroreM');
-    if(vecchiaPassword.value.length < 8){
-        errore.textContent = "La password vecchia era di almeno 8 caratteri";
-        vecchiaPassword.classList.add('erroreM');
+    else if(inputs[0].name !== "data" && inputs[0].value.trimEnd().trimStart().length.toString() > inputs[0].dataset.max && 
+            !(inputs[0].value.trimEnd().trimStart().length.toString().length < inputs[0].dataset.max.length)){
+        if(errore.textContent != "Puoi inserire al massimo " + inputs[0].dataset.max + " caratteri")
+            errore.textContent = "Puoi inserire al massimo " + inputs[0].dataset.max + " caratteri";
+        if(!inputs[0].classList.contains('erroreM'))
+            inputs[0].classList.add('erroreM');
     }
-    else if(nuovaPassword.value.length < 8){
-        errore.textContent = "La password nuova deve avere almeno 8 caratteri";
-        nuovaPassword.classList.add('erroreM');   
-    }
-    else if(vecchiaPassword.value === nuovaPassword.value){
-        errore.textContent = "Le nuova password non deve essere uguale alla vecchia";
-        nuovaPassword.classList.add('erroreM');   
-    }
-    else if(nuovaPassword.value !== confermaPassword.value){
-        errore.textContent = "La password di conferma non corrisponde";
-        nuovaPassword.classList.add('erroreM'); 
-        confermaPassword.classList.add('erroreM');   
-    }
-    else{ 
+    else{
         if(errore.textContent.length !== 0)
             errore.textContent = "";
-        fetch(
-            "/laravel/public/infoProfilo/modificaPassword", {method: 'post', body: new FormData(form)}
-        ).then(onResponse).then(esitoCambioPassword);
+        if(inputs[0].classList.contains('erroreM'))
+            inputs[0].classList.remove('erroreM');
     }
+}
+
+//CONTROLLO PASSWORD -------------------------------------------------------------------------------------------------------------------------------------------------------
+function controlloPassword(){
+    const errore = document.querySelector('p.errore.margineRidotto');
+    if(errore.textContent.length !== 0)
+        errore.textContent = "";
+    if(document.password.vecchiaPassword.classList.contains('erroreM'))
+        document.password.vecchiaPassword.classList.remove('erroreM');
+    if(document.password.nuovaPassword.classList.contains('erroreM'))
+        document.password.nuovaPassword.classList.remove('erroreM');
+    if(document.password.confermaPassword.classList.contains('erroreM'))
+        document.password.confermaPassword.classList.remove('erroreM');
+    if(document.password.vecchiaPassword.value.trimEnd().trimStart().length < 8){
+        errore.textContent = "Le password devono essere di almeno 8 caratteri";
+        document.password.vecchiaPassword.addEventListener('keyup', ottoCaratteri);
+        document.password.vecchiaPassword.classList.add('erroreM');
+    }
+    else if(document.password.nuovaPassword.value.trimEnd().trimStart().length < 8){
+        errore.textContent = "Le password devono essere di almeno 8 caratteri";
+        document.password.nuovaPassword.addEventListener('keyup', ottoCaratteri);
+        document.password.nuovaPassword.classList.add('erroreM');   
+    }
+    else if(document.password.vecchiaPassword.value.trimEnd().trimStart() === document.password.nuovaPassword.value.trimEnd().trimStart()){
+        errore.textContent = "La nuova password non deve essere uguale alla vecchia";
+        document.password.nuovaPassword.addEventListener('keyup', nuovaPassword);
+        document.password.nuovaPassword.classList.add('erroreM');   
+    }
+    else if(document.password.nuovaPassword.value.trimEnd().trimStart() !== document.password.confermaPassword.value.trimEnd().trimStart()){
+        errore.textContent = "Le due password non corrispondono";
+        document.password.nuovaPassword.addEventListener('keyup', confermaPassword);
+        document.password.confermaPassword.addEventListener('keyup', confermaPassword);
+        document.password.nuovaPassword.classList.add('erroreM'); 
+        document.password.confermaPassword.classList.add('erroreM');   
+    }
+    else
+        return true;
+    return false;
+}
+
+function ottoCaratteri(event){
+    input = event.currentTarget;
+    if(input.value.trimEnd().trimStart().length >= 8){
+        input.removeEventListener('keyup', ottoCaratteri);
+        controlloPassword();
+    }
+}
+
+function nuovaPassword(){
+    if(document.password.vecchiaPassword.value.trimEnd().trimStart() !== document.password.nuovaPassword.value.trimEnd().trimStart()){
+        document.password.nuovaPassword.removeEventListener('keyup', nuovaPassword);
+        controlloPassword();
+    }
+}
+
+function confermaPassword(){
+    if(document.password.nuovaPassword.value.trimEnd().trimStart() === document.password.confermaPassword.value.trimEnd().trimStart()){
+        document.password.nuovaPassword.removeEventListener('keyup', confermaPassword);
+        document.password.confermaPassword.removeEventListener('keyup', confermaPassword);
+        controlloPassword();
+    }
+}
+
+function vecchiaPassword(){
+    const errore = document.querySelector('p.errore.margineRidotto');
+    if(errore.textContent.length !== 0)
+        errore.textContent = "";
+    document.password.vecchiaPassword.removeEventListener('keyup', vecchiaPassword);
+    document.password.vecchiaPassword.classList.remove('erroreM');
 }
 
 //MODIFICA DATI -------------------------------------------------------------------------------------------------------------------------------------------------------
+function xButtonClick(event){
+    const form = event.currentTarget.parentNode.parentNode;
+    chiudiModifica(form, form.querySelector('label div p').textContent);
+}
+
+function chiudiModifica(form, value){
+    const div = form.querySelector('label div');
+    if(div.classList.contains('hidden')){
+        const p = div.querySelector('p');
+        if(p.textContent !== value.trimEnd().trimStart())
+            p.textContent = value.trimEnd().trimStart();
+        div.classList.remove('hidden');
+        form.querySelector('.xButton').classList.add('hidden');
+        const inputs = form.querySelectorAll('label input');
+        inputs[0].classList.add('hidden');
+        inputs[1].classList.add('hidden');
+        const errore = document.querySelector('p.errore.margineRidotto');
+        if(errore.textContent.length !== 0)
+            errore.textContent = "";
+    }
+}
+
 function riApriModifica(event){
+    chiudiAltro();
     const div = event.currentTarget.parentNode;
-    const label = div.parentNode;
+    const form = div.parentNode.parentNode;
     div.classList.add('hidden');
-    for(item of label.querySelectorAll('input'))
-        item.classList.remove('hidden');
+    form.querySelector('.xButton').classList.remove('hidden');
+    inputs = form.querySelectorAll('label input');
+    inputs[0].classList.remove('hidden');
+    inputs[1].classList.remove('hidden');
 }
 
 function apriModifica(event){
+    chiudiAltro();
     const div = event.currentTarget.parentNode;
     const label = div.parentNode;
     div.classList.add('hidden');
@@ -150,6 +209,7 @@ function apriModifica(event){
     input.type = (div.dataset.name !== 'data') ? "text":"date";
     input.value = div.querySelector('p').textContent;
     input.dataset.max = div.dataset.max;
+    input.addEventListener('keyup', controlloDati);
     input.classList.add('barraInput');
     label.appendChild(input);
     const submit = document.createElement('input');
@@ -157,42 +217,47 @@ function apriModifica(event){
     submit.classList.add('submit');
     label.appendChild(submit);
     submit.parentNode.parentNode.addEventListener('submit', inviaDati);
+    const xButton = document.createElement('img');
+    xButton.src = "/laravel/public/img/xButton.jpg";
+    xButton.classList.add('pointer');
+    xButton.classList.add('xButton');
+    xButton.addEventListener('click', xButtonClick);
+    label.appendChild(xButton);
     event.currentTarget.removeEventListener('click', apriModifica);
     event.currentTarget.addEventListener('click', riApriModifica);
 }
 
 //MODIFICA PASSWORD -------------------------------------------------------------------------------------------------------------------------------------------------------
 function chiudiModificaPassword(){
+    if(document.password.vecchiaPassword.classList.contains('erroreM'))
+        document.password.vecchiaPassword.classList.remove('erroreM');
+    if(document.password.nuovaPassword.classList.contains('erroreM'))
+        document.password.nuovaPassword.classList.remove('erroreM');
+    if(document.password.confermaPassword.classList.contains('erroreM'))
+        document.password.confermaPassword.classList.remove('erroreM');
+    document.password.vecchiaPassword.value = document.password.nuovaPassword.value = document.password.confermaPassword.value = "";
+    document.password.parentNode.querySelector('div').classList.remove('hidden');
+    document.password.classList.add('hidden');
     const errore = document.querySelector('p.errore.margineRidotto');
-    const vecchiaPassword = document.querySelector("input[name='vecchiaPassword']");
-    const nuovaPassword = document.querySelector("input[name='nuovaPassword']");
-    const confermaPassword = document.querySelector("input[name='confermaPassword']");
-    if(vecchiaPassword.classList.contains('erroreM'))
-        vecchiaPassword.classList.remove('erroreM');
-    if(nuovaPassword.classList.contains('erroreM'))
-        nuovaPassword.classList.remove('erroreM');
-    if(confermaPassword.classList.contains('erroreM'))
-        confermaPassword.classList.remove('erroreM');
-    if(errore.textContent.includes('password'))
+    if(errore.textContent.length !== 0)
         errore.textContent = "";
-    vecchiaPassword.value = nuovaPassword.value = confermaPassword.value = "";
-    const form = vecchiaPassword.parentNode.parentNode;
-    form.parentNode.querySelector('div').classList.remove('hidden');
-    form.classList.add('hidden');
 }
 
 function riApriModificaPassword(event){
+    chiudiAltro();
+    const errore = document.querySelector('p.errore.margineRidotto');
     const pulsante = event.currentTarget;
     pulsante.classList.add('hidden');
-    pulsante.parentNode.querySelector('form').classList.remove('hidden');
+    document.password.classList.remove('hidden');
 }
 
 function apriModificaPassword(event){
+    chiudiAltro();
     const pulsante = event.currentTarget;
     pulsante.classList.add('hidden');
     pulsante.removeEventListener("click", apriModificaPassword);
     pulsante.addEventListener("click", riApriModificaPassword);
-    const section = event.currentTarget.parentNode;
+    const section = pulsante.parentNode;
     const form = document.createElement('form');
     form.name = "password";
     form.addEventListener('submit', inviaPasswords);
@@ -200,12 +265,13 @@ function apriModificaPassword(event){
     const token = document.createElement('input');
     token.type = "hidden";
     token.name = "_token";
-    token.value = document.querySelector('form input').value;
+    token.value = document.querySelector("input[name='_token']").value;
     form.appendChild(token);
     const xButton = document.createElement('img');
     xButton.src = "/laravel/public/img/xButton.jpg";
     xButton.classList.add('pointer');
-    xButton.addEventListener('click', chiudiModificaPassword)
+    xButton.addEventListener('click', chiudiModificaPassword);
+    xButton.classList.add('xButton');
     form.appendChild(xButton);
     const label1 = document.createElement('label');
     label1.textContent = "Vecchia password: ";

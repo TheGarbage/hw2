@@ -1,40 +1,40 @@
 //Prima apertura -------------------------------------------------------------------------------------------------------------------------------------------------------
 function chiudiMenu(event){
-    const conteiner = event.currentTarget.querySelector('#nav-conteiner');
+    const conteiner = bottoneMenuPochiPixel.parentNode.querySelector('#nav-conteiner');
     conteiner.classList.add('hidden');
-    menuPochiPixel.removeEventListener('click', chiudiMenu);
-    menuPochiPixel.addEventListener('click', riapriMenu);
+    bottoneMenuPochiPixel.removeEventListener('click', chiudiMenu);
+    bottoneMenuPochiPixel.addEventListener('click', riapriMenu);
 }
 
 function riapriMenu(event){
-    const conteiner = event.currentTarget.querySelector('#nav-conteiner');
+    const conteiner = bottoneMenuPochiPixel.parentNode.querySelector('#nav-conteiner');
     conteiner.classList.remove('hidden');
-    menuPochiPixel.removeEventListener('click', riapriMenu);
-    menuPochiPixel.addEventListener('click', chiudiMenu);
+    bottoneMenuPochiPixel.removeEventListener('click', riapriMenu);
+    bottoneMenuPochiPixel.addEventListener('click', chiudiMenu);
 }
 
 
 //Prima apertura -------------------------------------------------------------------------------------------------------------------------------------------------------
 function apriMenu(event){
-    const conteiner = event.currentTarget.querySelector('#nav-conteiner');
+    const conteiner = bottoneMenuPochiPixel.parentNode.querySelector('#nav-conteiner');
     conteiner.classList.remove('hidden');
     const login = document.querySelector('#login');
-    conteiner.appendChild(login);
+    conteiner.appendChild(login.cloneNode(true));
     const nav = document.createElement('nav');
     const ul = document.createElement('ul');
     const a = document.querySelectorAll('header nav a');
     for(item of a){
         const li = document.createElement('li');
-        li.appendChild(item);
+        li.appendChild(item.cloneNode(true));
         ul.appendChild(li);
     }
     nav.appendChild(ul);
     conteiner.appendChild(nav);
-    menuPochiPixel.removeEventListener('click', apriMenu); 
-    menuPochiPixel.addEventListener('click', chiudiMenu);
+    bottoneMenuPochiPixel.removeEventListener('click', apriMenu); 
+    bottoneMenuPochiPixel.addEventListener('click', chiudiMenu);
 }
 
 
 //CONFIGURAZIONE INIZIALE -------------------------------------------------------------------------------------------------------------------------------------------------------
-const menuPochiPixel = document.querySelector('#menu-pochi-pixel');
-menuPochiPixel.addEventListener('click', apriMenu); 
+const bottoneMenuPochiPixel = document.querySelector('#bottone');
+bottoneMenuPochiPixel.addEventListener('click', apriMenu); 

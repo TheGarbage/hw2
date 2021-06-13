@@ -115,17 +115,18 @@ form[name = 'password']{
     border-radius: 20px;
 }
 
-form[name = 'password'] img{
-    position: absolute;
-    right: -20px;
-    top: -20px;
-    width: 20px;
-    height: 20px;
-    opacity: 0.8;
-}
-
 li label input.submitPassword{
     position: static;
+}
+
+/*xButton----------------------------------------------------------------------------------*/
+.xButton{
+    position: absolute;
+    right: -0.5rem;
+    top: -0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    opacity: 0.8;
 }
 
 /*ERRORE----------------------------------------------------------------------------------*/
@@ -167,12 +168,6 @@ li table{
     background-color: rgba(255, 0, 0, .5);
 }
 
-#logout:hover{
-    background-color: rgba(255, 0, 0, .1);
-    color: rgba(255, 0, 0);
-    border-color: rgba(255, 0, 0);
-}
-
 /*CAMBI DISTANZIATORE----------------------------------------------------------------------------------*/
 #distanziatore{
     height: 200px;
@@ -207,15 +202,21 @@ div[data-name = 'password']:hover{
     background-color: rgba(255, 255, 255, .1);
 }
 
-form[name = 'password'] img:hover{
-    right: -22.5px;
-    top: -22.5px;
-    width: 25px;
-    height: 25px;
+.xButton:hover{
+    right: calc(-0.5rem - 2px);
+    top: calc(-0.5rem - 2px);
+    width: calc(0.5rem + 4px);
+    height: calc(0.5rem + 4px);
 }
 
 #login:hover{
     border-color: rgba(255, 255, 255, .1);
+}
+
+#logout:hover{
+    background-color: rgba(255, 0, 0, .1);
+    color: rgba(255, 0, 0);
+    border-color: rgba(255, 0, 0);
 }
 
 /*MEDIA----------------------------------------------------------------------------------*/

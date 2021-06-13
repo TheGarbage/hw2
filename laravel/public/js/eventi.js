@@ -30,10 +30,11 @@ function creaEvento(evento, preferito){
 
 function creaEventi(eventi){
     const info = document.createElement('p');
+    console.log(eventi);
     main.appendChild(info);
-    if(eventi.length !== 0){
+    if(eventi['nonPreferiti'].length !== 0 || eventi['preferiti'] !== undefined){
         info.textContent = "Eventi attualmente attivi";
-        if(eventi['preferiti'] !== undefined && eventi['preferiti'].length !== 0){
+        if(eventi['preferiti'] !== undefined){
             for(evento of eventi['preferiti'])
                 creaEvento(evento, true);
             const separatore = document.createElement('div');

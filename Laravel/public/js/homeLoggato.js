@@ -200,7 +200,7 @@ function creaSottoSito(blocco){
     divPreferiti.classList.add('giochi');
     preferiti.appendChild(divPreferiti);
     if(errorePreferiti !== undefined)
-        newSottoSito.appendChild(errorePreferiti.cloneNode(true));
+        newSottoSito.appendChild(errorePreferiti);
     const nonPreferiti = document.createElement('section');
     nonPreferiti.classList.add('nonPreferiti');
     newSottoSito.appendChild(nonPreferiti);

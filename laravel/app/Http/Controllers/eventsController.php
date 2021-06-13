@@ -30,9 +30,13 @@ class eventsController extends BaseController{
                         'tempoRimasto' => $event->tempo_rimasto,
                         'descrizione' => $event->nome."<br>Modificatore Bonus: ".$event->modificatore_bonus."x<br>modificatore difficoltà: ".$event->modificatore_difficolta."x"
                     );
+            if(count($preferiti) !== 0)
+                return array(
+                    'nonPreferiti' => $nonPreferiti,
+                    'preferiti' => $preferiti
+                );
             return array(
-                'nonPreferiti' => $nonPreferiti,
-                'preferiti' => $preferiti
+                'nonPreferiti' => $nonPreferiti
             );
         }
         foreach($events as $event)
