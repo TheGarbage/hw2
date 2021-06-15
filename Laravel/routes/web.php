@@ -34,6 +34,7 @@ Route::get('classifica', 'rankingController@openRanking')->name('classifica');
 
 Route::get('eventi', 'eventsController@openEvents')->name('eventi');
 Route::get('eventi/get', 'eventsController@getEvents');
+Route::get('eventi/verify/{nome?}', 'eventsController@verify');
 
 Route::get('contatti', 'contactsController@openContacts')->name('contatti');
 

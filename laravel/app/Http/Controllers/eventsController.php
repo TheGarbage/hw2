@@ -49,6 +49,20 @@ class eventsController extends BaseController{
             'nonPreferiti' => $nonPreferiti
         );
     }
+
+    public function verify($id = "cerca"){
+        if($id === "cerca")
+            $user = User::find(session('userNameLudoteca'));
+        else 
+            $user = User::find($id);
+        if(isset($user)){
+            $events = DB::select("CALL proc4()");
+            foreach($events as $event)
+                if($user->Games()->where('game_id', $event->game_id)->first() !== null)
+                    return ['risposta' => true];
+        }
+        return ['risposta' => false];
+    }
 }
 
 ?>

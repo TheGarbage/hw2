@@ -11,156 +11,157 @@ function stampa(json){
         errore.textContent = json['risposta'];
         form.classList.remove('hidden');
         document.querySelector('main img').classList.remove('hidden');
-        if(json['risposta'] === "Username non disponibile")
+        if(json['risposta'] === "Username non disponibile"){
             form.userName.parentNode.classList.add('erroreL');
+            form.userName.addEventListener('keyup', usernameNonDisponibile);
+        }
     }
 }
 
-//FUNZIONI CONTROLLO POST-SUBMIT-------------------------------------------------------------------------------------------------------------------------------------------------------
-function bloccoSubmit(event){
+//FETCH-------------------------------------------------------------------------------------------------------------------------------------------------------
+function submitRegistrazione(event){
     event.preventDefault();
-    controlloContenutoRegistrazione();
-    if(document.querySelector('label.erroreL') === null){
-        const errore = document.querySelector('p.erroreL');
+    const errore = document.querySelector('p.erroreL');
+    if(errore.textContent !== "Username non disponibile" && controlloContenutoRegistrazione()){
         form.classList.add('hidden');
         document.querySelector('main img').classList.add('hidden');
-        if(errore.textContent === "Username non disponibile"){
-            form.userName.parentNode.classList.remove('erroreL');
-            errore.textContent = "";
-        }
         fetch('/laravel/public/registration', {method: 'post', body: new FormData(form)}).then(rispostaRegistrazione).then(stampa);
     }
 }
 
+function submitLogin(event){
+    const errore = document.querySelector('p.erroreL');
+    if(errore.textContent === "Credenziali non valide" || !controlloContenutoLogin())
+        event.preventDefault();
+}
+
+//FUNZIONI CONTROLLO GENERALI-------------------------------------------------------------------------------------------------------------------------------------------------------
 function controlloContenutoRegistrazione(){
     const errore = document.querySelector('p.erroreL');
-    if(form.nomeCognome.value.length === 0 || form.userName.value.length === 0 || form.passWord.value.length === 0 ||
-        form.confermaPassword.value.length === 0 || form.occupazione.value.length === 0 || form.dataNascita.value.length === 0){
-        errore.textContent = "Devi compilare tutti i campi";
-        if(form.nomeCognome.value.length == 0) {
-            form.nomeCognome.parentNode.classList.add('erroreL');
-            form.nomeCognome.addEventListener('blur', controllaErrore);
-        }
-        if(form.userName.value.length == 0) {
-            form.userName.parentNode.classList.add('erroreL');
-            form.userName.addEventListener('blur', controllaErrore);
-        }
-        if(form.passWord.value.length == 0) {
-            form.passWord.parentNode.classList.add('erroreL');
-            form.passWord.addEventListener('blur', controllaErrore);
-        }
-        if(form.confermaPassword.value.length == 0) {
-            form.confermaPassword.parentNode.classList.add('erroreL');
-            form.confermaPassword.addEventListener('blur', controllaErrore);
-        }
-        if(form.occupazione.value.length == 0) {
-            form.occupazione.parentNode.classList.add('erroreL');
-            form.occupazione.addEventListener('blur', controllaErrore);
-        }       
-        if(form.dataNascita.value.length === 0) {
-            form.dataNascita.parentNode.classList.add('erroreL');
-            form.dataNascita.addEventListener('blur', controllaErrore);
-        }
+    if(errore.textContent.length !== 0)
+        errore.textContent = "";
+    if(form.nomeCognome.value.trimEnd().trimStart().length === 0) {
+        form.nomeCognome.parentNode.classList.add('erroreL');
+        form.nomeCognome.addEventListener('keyup', controllaVuoto);
+        errore.textContent = "Campo nome e cognome obbligatorio";
     }
-    else if(form.nomeCognome.value.length.toString() > form.nomeCognome.dataset.max && 
-            !(form.nomeCognome.value.length.toString().length < form.nomeCognome.dataset.max.length)){
+    else if(form.nomeCognome.value.trimEnd().trimStart().length.toString() > form.nomeCognome.dataset.max && 
+            !(form.nomeCognome.value.trimEnd().trimStart().length.toString().length < form.nomeCognome.dataset.max.length)){
         errore.textContent = "Nome e cognome troppo lunghi(Max 50)";
         form.nomeCognome.parentNode.classList.add('erroreL');
-        form.nomeCognome.addEventListener('blur', controllaLunghezza);
+        form.nomeCognome.addEventListener('keyup', controllaLunghezza);
     }
-    else if(form.userName.value.length.toString() > form.userName.dataset.max && 
-            !(form.userName.value.length.toString().length < form.userName.dataset.max.length)){
+    else if(form.userName.value.trimEnd().trimStart().length === 0) {
+        form.userName.parentNode.classList.add('erroreL');
+        form.userName.addEventListener('keyup', controllaVuoto);
+        errore.textContent = "Campo username obbligatorio";
+    }
+    else if(form.userName.value.trimEnd().trimStart().length.toString() > form.userName.dataset.max && 
+            !(form.userName.value.trimEnd().trimStart().length.toString().length < form.userName.dataset.max.length)){
         errore.textContent = "Username troppo lungo(Max 20)";
         form.userName.parentNode.classList.add('erroreL');
-        form.userName.addEventListener('blur', controllaLunghezza);
+        form.userName.addEventListener('keyup', controllaLunghezza);
     }
-    else if(form.occupazione.value.length.toString() > form.occupazione.dataset.max && 
-            !(form.occupazione.value.length.toString().length < form.occupazione.dataset.max.length)){
-        errore.textContent = "Ocupazione troppo lunga(Max 30)";
-        form.occupazione.parentNode.classList.add('erroreL');
-        form.occupazione.addEventListener('blur', controllaLunghezza);
+    else if(form.passWord.value.trimEnd().trimStart().length === 0) {
+        form.passWord.parentNode.classList.add('erroreL');
+        form.passWord.addEventListener('keyup', controllaVuoto);
+        errore.textContent = "Campo password obbligatorio";
     }
-    else if(form.passWord.value.length < 8){
+    else if(form.passWord.value.trimEnd().trimStart().length < 8){
         errore.textContent = "La password deve essere di almeno 8 caratteri";
         form.passWord.parentNode.classList.add('erroreL');
-        form.passWord.addEventListener('blur', controllaLunghezzaPassword);
+        form.passWord.addEventListener('keyup', controllaLunghezzaPassword);
     }
-    else if(form.passWord.value !== form.confermaPassword.value){
-        errore.textContent = "Le due password non corrispondono";
+    else if(form.passWord.value.trimEnd().trimStart() !== form.confermaPassword.value.trimEnd().trimStart()){
+        errore.textContent = "Le due passwords non corrispondono";
         form.passWord.parentNode.classList.add('erroreL');
         form.confermaPassword.parentNode.classList.add('erroreL');
-        form.passWord.addEventListener('blur', controllaPassword);
-        form.confermaPassword.addEventListener('blur', controllaPassword);
+        form.passWord.addEventListener('keyup', controllaPassword);
+        form.confermaPassword.addEventListener('keyup', controllaPassword);
+    }
+    else if(form.occupazione.value.trimEnd().trimStart().length === 0) {
+        form.occupazione.parentNode.classList.add('erroreL');
+        form.occupazione.addEventListener('keyup', controllaVuoto);
+        errore.textContent = "Campo occupazione obbligatorio";
+    }
+    else if(form.occupazione.value.trimEnd().trimStart().length.toString() > form.occupazione.dataset.max && 
+            !(form.occupazione.value.trimEnd().trimStart().length.toString().length < form.occupazione.dataset.max.length)){
+        errore.textContent = "Ocupazione troppo lunga(Max 30)";
+        form.occupazione.parentNode.classList.add('erroreL');
+        form.occupazione.addEventListener('keyup', controllaLunghezza);
+    }       
+    else if(form.dataNascita.value.trimEnd().trimStart().length === 0) {
+        form.dataNascita.parentNode.classList.add('erroreL');
+        form.dataNascita.addEventListener('keyup', controllaVuoto);
+        errore.textContent = "Campo giorno nascita obbligatorio";
     }
     else if(!form.privacy.checked){
         errore.textContent = "Accetta la condizione sul trattamento dei dati";
         form.privacy.parentNode.classList.add('erroreL');
         form.privacy.addEventListener('click', privacyAccettata)
-    }     
+    }    
+    else
+        return true;
+    return false; 
 }
 
-function controlloContenutoLogin(event){
+function controlloContenutoLogin(){
     const errore = document.querySelector('p.erroreL');
-    if(document.querySelector('label.erroreL') !== null && errore.textContent !== " Credenziali non valide ")
-        event.preventDefault();
-    else if(form.userName.value.length == 0 ||
-       form.passWord.value.length == 0){
-        event.preventDefault();
-        if(errore.textContent === " Credenziali non valide "){
-            if(form.userName.value.length != 0) form.userName.parentNode.classList.remove('erroreL');
-            if(form.passWord.value.length != 0) form.passWord.parentNode.classList.remove('erroreL');
-        }
-        document.querySelector('p.erroreL').textContent = "Devi compilare tutti i campi";
-        if(form.userName.value.length == 0) {
-            if(!form.userName.classList.contains('erroreL')) form.userName.parentNode.classList.add('erroreL');
-            form.userName.addEventListener('blur', controllaErrore);
-        }
-        if(form.passWord.value.length == 0) {
-            if(!form.passWord.classList.contains('erroreL')) form.passWord.parentNode.classList.add('erroreL');
-            form.passWord.addEventListener('blur', controllaErrore);
-        } 
+    if(errore.textContent.length !== 0)
+        errore.textContent = "";
+    if(form.userName.value.trimEnd().trimStart().length === 0){
+        errore.textContent = "Campo username obbligatorio";
+        form.userName.parentNode.classList.add('erroreL');
+        form.userName.addEventListener('keyup', controllaVuoto);
     }
+    else if(form.passWord.value.trimEnd().trimStart().length === 0){
+        errore.textContent = "Campo password obbligatorio";
+        form.passWord.parentNode.classList.add('erroreL');
+        form.passWord.addEventListener('keyup', controllaVuoto);
+    }
+    else
+        return true;
+    return false;
 }
 
-//FUNZIONI CONTROLLO PRE-SUBMIT -------------------------------------------------------------------------------------------------------------------------------------------------------
+//FUNZIONI CONTROLLO SPECIFICHE -------------------------------------------------------------------------------------------------------------------------------------------------------
 function controllaLunghezza(event){
     const input = event.currentTarget;
-    if(input.value.length.toString() < input.dataset && !(input.value.length.toString().length > input.dataset.max.length)){
+    if(input.value.trimEnd().trimStart().length.toString() < input.dataset && 
+       !(input.value.trimEnd().trimStart().length.toString().length > input.dataset.max.length)){
         input.parentNode.classList.remove('erroreL');
-        input.removeEventListener('blur', controllaLunghezza);
-        document.querySelector('p.erroreL').textContent = "";
+        input.removeEventListener('keyup', controllaLunghezza);
         controlloContenutoRegistrazione();
     }
 }
 
 function controllaLunghezzaPassword(){
-    if(form.passWord.value.length.toString() > 7){
+    if(form.passWord.value.trimEnd().trimStart().length.toString() > 7){
         form.passWord.parentNode.classList.remove('erroreL');
-        form.passWord.removeEventListener('blur', controllaLunghezzaPassword);
-        document.querySelector('p.erroreL').textContent = "";
+        form.passWord.removeEventListener('keyup', controllaLunghezzaPassword);
         controlloContenutoRegistrazione();
     }
 }
 
-function controllaErrore(event){
+function controllaVuoto(event){
+    console.log('ciao');
     const input = event.currentTarget;
-    if(input.value.length !== 0){
+    if(input.value.trimEnd().trimStart().length !== 0){
         input.parentNode.classList.remove('erroreL');
-        input.removeEventListener('blur', controllaErrore);
-        if(document.querySelector('label.erroreL') === null){
-            document.querySelector('p.erroreL').textContent = "";
+        input.removeEventListener('keyup', controllaVuoto);
+        if(form.querySelector('h2').textContent === "Benvenuto")
             controlloContenutoRegistrazione();
-        }
+        else 
+            controlloContenutoLogin();
     }
 }
 
 function controllaPassword(){
-    if(form.confermaPassword.value === form.passWord.value){
+    if(form.confermaPassword.value.trimEnd().trimStart() === form.passWord.value.trimEnd().trimStart()){
         form.passWord.parentNode.classList.remove('erroreL');
         form.confermaPassword.parentNode.classList.remove('erroreL');
-        form.passWord.removeEventListener('blur', controllaPassword);
-        form.confermaPassword.removeEventListener('blur', controllaPassword);
-        document.querySelector('p.erroreL').textContent = "";
+        form.passWord.removeEventListener('keyup', controllaPassword);
+        form.confermaPassword.removeEventListener('keyup', controllaPassword);
         controlloContenutoRegistrazione();
     }
 }
@@ -169,25 +170,45 @@ function privacyAccettata(event){
     const privacy = event.currentTarget;
     privacy.parentNode.classList.remove('erroreL');
     privacy.removeEventListener('click', privacyAccettata);
-    document.querySelector('p.erroreL').textContent = "";
     controlloContenutoRegistrazione();
+}
+
+function credenzialiNonValide(){
+    form.removeEventListener('keyup', credenzialiNonValide);
+    form.userName.parentNode.classList.remove('erroreL');
+    form.passWord.parentNode.classList.remove('erroreL');
+    const errore = document.querySelector('p.erroreL');
+    if(errore.textContent.length !== 0)
+        errore.textContent = "";   
+}
+
+function usernameNonDisponibile(){
+    form.userName.removeEventListener('keyup', usernameNonDisponibile);
+    form.userName.parentNode.classList.remove('erroreL');
+    const errore = document.querySelector('p.erroreL');
+    if(errore.textContent.length !== 0)
+        errore.textContent = "";   
 }
 
 //SWITCH REGISTRAZIONE LOGIN -------------------------------------------------------------------------------------------------------------------------------------------------------
 function rimuoviErrori(event){
     const p = event.currentTarget;
     const main = p.parentNode.parentNode;
+    const errore = document.querySelector('p.erroreL');
+    if(errore.textContent === "Credenziali non valide"){
+        form.userName.parentNode.classList.remove('erroreL');
+        form.passWord.parentNode.classList.remove('erroreL');
+    }
     for(item of main.querySelectorAll('label')){
         if(item.classList.contains('erroreL')){
             item.classList.remove('erroreL');
-            item.removeEventListener('blur', controllaErrore);
-            item.removeEventListener('blur', controllaLunghezza);
+            form.replaceChild(item.cloneNode(true), item);
         }
     }
     document.querySelector('.erroreL').textContent = "";
 }
 
-function registrazioneBis(event){
+function riApriRegistrazione(event){
     const p = event.currentTarget;
     const form = p.parentNode;
     const titolo = form.querySelector("h2");
@@ -195,13 +216,13 @@ function registrazioneBis(event){
         item.classList.remove('hidden');
     p.textContent = "Se hai gia` un account loggati";
     titolo.textContent = "Benvenuto";
-    p.removeEventListener('click', registrazioneBis);
-    p.addEventListener('click', login);
+    p.removeEventListener('click', riApriRegistrazione);
+    p.addEventListener('click', apriLogin);
     form.removeEventListener('submit', controlloContenutoLogin);
-    form.addEventListener('submit', bloccoSubmit);
+    form.addEventListener('submit', submitRegistrazione);
 }
 
-function login(event){
+function apriLogin(event){
     const p = event.currentTarget;
     const form = p.parentNode;
     const titolo = form.querySelector("h2");
@@ -209,13 +230,13 @@ function login(event){
         item.classList.add('hidden');
     p.textContent = "Se non hai un account registrati!";
     titolo.textContent = "Bentornato";
-    p.removeEventListener('click', login);
-    p.addEventListener('click', registrazioneBis);
-    form.removeEventListener('submit', bloccoSubmit);
+    p.removeEventListener('click', apriLogin);
+    p.addEventListener('click', riApriRegistrazione);
+    form.removeEventListener('submit', submitRegistrazione);
     form.addEventListener('submit', controlloContenutoLogin);
 }
 
-function registrazione(event){
+function apriRegistrazione(event){
     const p = event.currentTarget;
     const form = p.parentNode;
     const titolo = form.querySelector('h2');
@@ -273,15 +294,17 @@ function registrazione(event){
     p.textContent = "Se hai gia` un account loggati";
     form.appendChild(p);
     titolo.textContent = "Benvenuto";
-    p.removeEventListener('click', registrazione);
-    p.addEventListener('click', login);
-    form.removeEventListener('submit', controlloContenutoLogin);
-    form.addEventListener('submit', bloccoSubmit);
+    p.removeEventListener('click', apriRegistrazione);
+    p.addEventListener('click', apriLogin);
+    form.removeEventListener('submit', submitLogin);
+    form.addEventListener('submit', submitRegistrazione);
 }
 
 //CONFIGURAZIONE INIZIALE -------------------------------------------------------------------------------------------------------------------------------------------------------
 const form = document.forms['login'];
-form.addEventListener('submit', controlloContenutoLogin);
+form.addEventListener('submit', submitLogin);
 const p = document.querySelector('p');
-p.addEventListener('click', registrazione);
 p.addEventListener('click', rimuoviErrori);
+p.addEventListener('click', apriRegistrazione);
+if(form.userName.parentNode.classList.contains('erroreL'))
+    form.addEventListener('keyup', credenzialiNonValide);

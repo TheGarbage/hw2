@@ -104,6 +104,20 @@ body{
     width: 87%;
 }
 
+.redDotConteiner{
+    position: relative;
+}
+
+#redDot{
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 100%;
+    opacity: .6;
+    position: absolute;
+    top: 0px;
+    right: 8%;
+}
+
 #menu-pochi-pixel #login{
     display: block;
     border-radius: 20px;
@@ -736,6 +750,10 @@ thead td, thead th{
 }
 
 @media (max-width: 1000px){
+    #redDot{
+        right: 3%;
+    }
+
     .giocoPreferito{
         width: calc(25% - 10px);
     }
@@ -811,6 +829,12 @@ thead td, thead th{
 
     #paginaAttuale:hover{
         border-radius: 20px;
+    }
+
+    #redDot{
+        width: 0.7rem;
+        height: 0.7rem;
+        right: -1rem;
     }
 
     #descrizione{

@@ -9,6 +9,7 @@ class infoProfiloController extends BaseController{
             if(count($user->Registers) === 0)
                 return view('infoProfilo')
                     ->with('nome', $user->nome)
+                    ->with('id', $user->id)
                     ->with('dati', array(
                         'nome' => $user->nome,
                         'username' => $user->username,
@@ -36,6 +37,7 @@ class infoProfiloController extends BaseController{
             }
             return view('infoProfilo')
                     ->with('nome', $user->nome)
+                    ->with('id', $user->id)
                     ->with('dati', array(
                         'nome' => $user->nome,
                         'username' => $user->username,

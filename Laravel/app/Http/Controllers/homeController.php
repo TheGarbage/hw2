@@ -7,7 +7,8 @@ class homeController extends BaseController{
         $user = User::find(session('userNameLudoteca'));
         if(isset($user))
             return view('home')
-                ->with('nome', $user->nome);
+                ->with('nome', $user->nome)
+                ->with('id', $user->id);
         return view('home');
     }
 
@@ -37,7 +38,8 @@ class homeController extends BaseController{
         $user = User::find(session('userNameLudoteca'));
         if(isset($user))
             return view('scopriDiPiu')
-                ->with('nome', $user->nome);
+                ->with('nome', $user->nome)
+                ->with('id', $user->id);
         return view('scopriDiPiu');
     }
 

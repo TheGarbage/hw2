@@ -25,6 +25,7 @@ class rankingController extends BaseController{
                 );
             return view('classifica')
                 ->with('nome', $user->nome)
+                ->with('id', $user->id)
                 ->with('dati', $response);
         }
         return view('classifica')

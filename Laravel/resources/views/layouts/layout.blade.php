@@ -33,7 +33,13 @@
                 </a><br>
                 <nav>   
                 <a @if(Request::routeIs('home')) id="paginaAttuale" @else href="{{ url('home') }}" @endif>Home</a>
-                <a @if(Request::routeIs('eventi')) id="paginaAttuale" @else href="{{ url('eventi') }}" @endif>Eventi</a>
+                <a @if(Request::routeIs('eventi')) id="paginaAttuale" @else href="{{ url('eventi') }}" @endif 
+                   @if(isset($nome)) class="redDotConteiner" @endif
+                   >Eventi
+                    @if(isset($id) && (Http::get('http://localhost/laravel/public/eventi/verify/'.$id))['risposta']) 
+                        <img src="/laravel/public/img/redDot.jpg" id="redDot">
+                    @endif
+                </a>
                 <a @if(Request::routeIs('classifica')) id="paginaAttuale" @else href="{{ url('classifica') }}" @endif>Classifica</a>
                 <a @if(Request::routeIs('contatti')) id="paginaAttuale" @else href="{{ url('contatti') }}" @endif>Contatti</a>
                 </nav>

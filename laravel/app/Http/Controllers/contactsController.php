@@ -7,7 +7,8 @@ class contactsController extends BaseController{
         $user = User::find(session('userNameLudoteca'));
         if(isset($user))
             return view('contatti')
-                ->with('nome', $user->nome);
+                ->with('nome', $user->nome)
+                ->with('id', $user->id);
         return view('contatti');
     }
 }

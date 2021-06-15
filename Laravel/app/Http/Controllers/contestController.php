@@ -9,14 +9,17 @@ class contestController extends BaseController{
             if(request('errore') !== null)
                 return view('contest')
                     ->with('nome', $user->nome)
+                    ->with('id', $user->id)
                     ->with('response', request('errore'))
                     ->with('errore', "true");
             if(isset($user->Contest))
                 return view('contest')
                     ->with('nome', $user->nome)
+                    ->with('id', $user->id)
                     ->with('response', $user->Contest->nome_videogioco);
             return view('contest')
-                ->with('nome', $user->nome);
+                ->with('nome', $user->nome)
+                ->with('id', $user->id);
         }
         return view('contest');
     }

@@ -1,4 +1,22 @@
 //FETCH DATABASE -------------------------------------------------------------------------------------------------------------------------------------------------------
+function redDot($risposta){
+    let redDot = document.querySelector('#redDot');
+    if($risposta['risposta']){
+        if(redDot === null){
+            redDot = document.createElement('img');
+            redDot.src = "/laravel/public/img/redDot.jpg";
+            redDot.id = "redDot";
+            document.querySelector('.redDotConteiner').appendChild(redDot);
+        }
+        else
+            if(redDot.classList.contains('hidden'))
+                redDot.classList.remove('hidden');
+    }
+    else
+        if(redDot !== null)
+            redDot.classList.add('hidden');
+}
+
 function onJsonVideogiochi(giochiJSon){
     let indice;
     for(let id in index)
@@ -80,6 +98,8 @@ function onJsonVideogiochi(giochiJSon){
 function esitoModifica(json){
     if(json['risposta'] !== "ok")
         alert(json['risposta']);
+    else 
+        fetch('/laravel/public/eventi/verify').then(onResponse).then(redDot);
 }
 
 function onJsonPreferiti(preferiti){
@@ -96,6 +116,13 @@ function onJsonPreferiti(preferiti){
 function onResponse(response){
     return response.json();
 }
+
+//FUNZIONI TEMPOREGGIATE -------------------------------------------------------------------------------------------------------------------------------------------------------
+function controllaEventi(){
+    fetch('/laravel/public/eventi/verify').then(onResponse).then(redDot);
+    window.setTimeout("controllaEventi()", 60000);
+}
+
 
 //FUNZIONI D'APPOGGIO -------------------------------------------------------------------------------------------------------------------------------------------------------
 function nascondiGiochi(lettera){
@@ -273,7 +300,7 @@ function togliPreferiti(event){
 }
 
 function ricerca(event){
-    const nuovaValue = event.currentTarget.value;
+    const nuovaValue = event.currentTarget.value.trimEnd().trimStart();
     let lettera = null;
     if(vecchiaValue.length < nuovaValue.length){
         for(let i = 0; i < vecchiaValue.length; i++)
@@ -411,3 +438,4 @@ for (const blocco of blocchi){
     blocco.addEventListener('mouseover', vediDidascalia);
     blocco.addEventListener('click', apriSottoSito);
 }
+window.setTimeout("controllaEventi()", 60000);

@@ -37,9 +37,11 @@ function creaEventi(eventi){
         if(eventi['preferiti'] !== undefined){
             for(evento of eventi['preferiti'])
                 creaEvento(evento, true);
-            const separatore = document.createElement('div');
-            separatore.id = 'separatore';
-            main.appendChild(separatore);
+            if(eventi['nonPreferiti'].length !== 0){
+                const separatore = document.createElement('div');
+                separatore.id = 'separatore';
+                main.appendChild(separatore);
+            }
         }
         for(evento of eventi['nonPreferiti'])
             creaEvento(evento, false);
