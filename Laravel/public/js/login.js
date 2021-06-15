@@ -22,7 +22,7 @@ function stampa(json){
 function submitRegistrazione(event){
     event.preventDefault();
     const errore = document.querySelector('p.erroreL');
-    if(errore.textContent !== "Username non disponibile" && controlloContenutoRegistrazione()){
+    if(form.querySelector('erroreL') === null && errore.textContent !== "Username non disponibile" && controlloContenutoRegistrazione()){
         form.classList.add('hidden');
         document.querySelector('main img').classList.add('hidden');
         fetch('/laravel/public/registration', {method: 'post', body: new FormData(form)}).then(rispostaRegistrazione).then(stampa);
@@ -31,7 +31,7 @@ function submitRegistrazione(event){
 
 function submitLogin(event){
     const errore = document.querySelector('p.erroreL');
-    if(errore.textContent === "Credenziali non valide" || !controlloContenutoLogin())
+    if(form.querySelector('erroreL') !== null || errore.textContent === "Credenziali non valide" || !controlloContenutoLogin())
         event.preventDefault();
 }
 
@@ -45,8 +45,7 @@ function controlloContenutoRegistrazione(){
         form.nomeCognome.addEventListener('keyup', controllaVuoto);
         errore.textContent = "Campo nome e cognome obbligatorio";
     }
-    else if(form.nomeCognome.value.trimEnd().trimStart().length.toString() > form.nomeCognome.dataset.max && 
-            !(form.nomeCognome.value.trimEnd().trimStart().length.toString().length < form.nomeCognome.dataset.max.length)){
+    else if(form.nomeCognome.value.trimEnd().trimStart().length > parseInt(form.nomeCognome.dataset.max)){
         errore.textContent = "Nome e cognome troppo lunghi(Max 50)";
         form.nomeCognome.parentNode.classList.add('erroreL');
         form.nomeCognome.addEventListener('keyup', controllaLunghezza);
@@ -56,8 +55,7 @@ function controlloContenutoRegistrazione(){
         form.userName.addEventListener('keyup', controllaVuoto);
         errore.textContent = "Campo username obbligatorio";
     }
-    else if(form.userName.value.trimEnd().trimStart().length.toString() > form.userName.dataset.max && 
-            !(form.userName.value.trimEnd().trimStart().length.toString().length < form.userName.dataset.max.length)){
+    else if(form.userName.value.trimEnd().trimStart().length > parseInt(form.userName.dataset.max)){
         errore.textContent = "Username troppo lungo(Max 20)";
         form.userName.parentNode.classList.add('erroreL');
         form.userName.addEventListener('keyup', controllaLunghezza);
@@ -84,8 +82,7 @@ function controlloContenutoRegistrazione(){
         form.occupazione.addEventListener('keyup', controllaVuoto);
         errore.textContent = "Campo occupazione obbligatorio";
     }
-    else if(form.occupazione.value.trimEnd().trimStart().length.toString() > form.occupazione.dataset.max && 
-            !(form.occupazione.value.trimEnd().trimStart().length.toString().length < form.occupazione.dataset.max.length)){
+    else if(form.occupazione.value.trimEnd().trimStart().length > parseInt(form.occupazione.dataset.max)){
         errore.textContent = "Ocupazione troppo lunga(Max 30)";
         form.occupazione.parentNode.classList.add('erroreL');
         form.occupazione.addEventListener('keyup', controllaLunghezza);
@@ -127,8 +124,7 @@ function controlloContenutoLogin(){
 //FUNZIONI CONTROLLO SPECIFICHE -------------------------------------------------------------------------------------------------------------------------------------------------------
 function controllaLunghezza(event){
     const input = event.currentTarget;
-    if(input.value.trimEnd().trimStart().length.toString() < input.dataset && 
-       !(input.value.trimEnd().trimStart().length.toString().length > input.dataset.max.length)){
+    if(input.value.trimEnd().trimStart().length < parseInt(input.dataset.max)){
         input.parentNode.classList.remove('erroreL');
         input.removeEventListener('keyup', controllaLunghezza);
         controlloContenutoRegistrazione();
@@ -144,7 +140,6 @@ function controllaLunghezzaPassword(){
 }
 
 function controllaVuoto(event){
-    console.log('ciao');
     const input = event.currentTarget;
     if(input.value.trimEnd().trimStart().length !== 0){
         input.parentNode.classList.remove('erroreL');
@@ -218,7 +213,7 @@ function riApriRegistrazione(event){
     titolo.textContent = "Benvenuto";
     p.removeEventListener('click', riApriRegistrazione);
     p.addEventListener('click', apriLogin);
-    form.removeEventListener('submit', controlloContenutoLogin);
+    form.removeEventListener('submit', submitLogin);
     form.addEventListener('submit', submitRegistrazione);
 }
 
@@ -233,7 +228,7 @@ function apriLogin(event){
     p.removeEventListener('click', apriLogin);
     p.addEventListener('click', riApriRegistrazione);
     form.removeEventListener('submit', submitRegistrazione);
-    form.addEventListener('submit', controlloContenutoLogin);
+    form.addEventListener('submit', submitLogin);
 }
 
 function apriRegistrazione(event){

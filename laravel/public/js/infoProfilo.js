@@ -67,7 +67,7 @@ function inviaDati(event){
 function inviaPasswords(event){
     event.preventDefault();
     const errore = document.querySelector('p.errore.margineRidotto');
-    if(controlloPassword() && errore.textContent !== "La password vecchia non corrisponde, riprovare"){
+    if(document.password.querySelector('.erroreM') === null && errore.textContent !== "La password vecchia non corrisponde, riprovare" && controlloPassword()){
         document.password.classList.add('hidden');
         fetch("/laravel/public/infoProfilo/modificaPassword", {method: 'post', body: new FormData(document.password)}).then(onResponse).then(esitoCambioPassword);
     }
@@ -102,14 +102,6 @@ function controlloDati(event){
 //CONTROLLO PASSWORD -------------------------------------------------------------------------------------------------------------------------------------------------------
 function controlloPassword(){
     const errore = document.querySelector('p.errore.margineRidotto');
-    if(errore.textContent.length !== 0)
-        errore.textContent = "";
-    if(document.password.vecchiaPassword.classList.contains('erroreM'))
-        document.password.vecchiaPassword.classList.remove('erroreM');
-    if(document.password.nuovaPassword.classList.contains('erroreM'))
-        document.password.nuovaPassword.classList.remove('erroreM');
-    if(document.password.confermaPassword.classList.contains('erroreM'))
-        document.password.confermaPassword.classList.remove('erroreM');
     if(document.password.vecchiaPassword.value.trimEnd().trimStart().length < 8){
         errore.textContent = "Le passwords devono essere di almeno 8 caratteri";
         document.password.vecchiaPassword.addEventListener('keyup', ottoCaratteri);
@@ -138,30 +130,47 @@ function controlloPassword(){
 }
 
 function ottoCaratteri(event){
+    const errore = document.querySelector('p.errore.margineRidotto');
     input = event.currentTarget;
     if(input.value.trimEnd().trimStart().length >= 8){
+        input.classList.remove('erroreM');
         input.removeEventListener('keyup', ottoCaratteri);
+        if(errore.textContent.length !== 0)
+        errore.textContent = "";
         controlloPassword();
     }
 }
 
 function nuovaPassword(){
+    const errore = document.querySelector('p.errore.margineRidotto');
     if(document.password.vecchiaPassword.value.trimEnd().trimStart() !== document.password.nuovaPassword.value.trimEnd().trimStart()){
+        document.password.nuovaPassword.classList.remove('erroreM');
         document.password.nuovaPassword.removeEventListener('keyup', nuovaPassword);
+        if(errore.textContent.length !== 0)
+        errore.textContent = "";
         controlloPassword();
     }
 }
 
 function confermaPassword(){
+    const errore = document.querySelector('p.errore.margineRidotto');
     if(document.password.nuovaPassword.value.trimEnd().trimStart() === document.password.confermaPassword.value.trimEnd().trimStart()){
+        document.password.nuovaPassword.classList.remove('erroreM');
         document.password.nuovaPassword.removeEventListener('keyup', confermaPassword);
+        document.password.confermaPassword.classList.remove('erroreM');
         document.password.confermaPassword.removeEventListener('keyup', confermaPassword);
+        if(errore.textContent.length !== 0)
+        errore.textContent = "";
         controlloPassword();
     }
 }
 
 function vecchiaPassword(){
+    const errore = document.querySelector('p.errore.margineRidotto');
     document.password.vecchiaPassword.removeEventListener('keyup', vecchiaPassword);
+    document.password.vecchiaPassword.classList.remove('erroreM');
+    if(errore.textContent.length !== 0)
+    errore.textContent = "";
     controlloPassword();
 }
 
@@ -196,6 +205,7 @@ function riApriModifica(event){
     form.querySelector('.xButton').classList.remove('hidden');
     inputs = form.querySelectorAll('label input');
     inputs[0].classList.remove('hidden');
+    inputs[0].value = div.querySelector('p').textContent;
     inputs[1].classList.remove('hidden');
 }
 
